@@ -1,19 +1,20 @@
-# Use Java 17 base image (Render compatible)
-FROM eclipse-temurin:17-jdk-jammy
+# Use Ubuntu 24.04 which has GLIBC 2.39 (Required by Coral CLI v0.4.1)
+FROM ubuntu:24.04
 
-# Install necessary tools
-RUN apt-get update && apt-get install -y curl unzip maven
-
-# Disable all interactive prompts globally
+# Disable interactive prompts for apt-get
+ENV DEBIAN_FRONTEND=noninteractive
 ENV CI=true
 ENV NONINTERACTIVE=1
+
+# Install Java 17, Maven, and required tools
+RUN apt-get update && apt-get install -y openjdk-17-jdk curl unzip maven
 
 # Force the install script to put coral in the global system path
 ENV CORAL_INSTALL_DIR=/usr/local/bin
 RUN curl -fsSL https://withcoral.com/install.sh | sh || true
 RUN test -f /usr/local/bin/coral || ln -s /root/.local/bin/coral /usr/local/bin/coral
 
-# Warm up the local database engine during the build phase so it doesn't timeout the Java app
+# Warm up the local database engine during the build phase
 RUN coral sql "select 1"
 
 # Set working directory
@@ -28,5 +29,5 @@ RUN mvn clean package -DskipTests
 # Expose the port Spring Boot runs on
 EXPOSE 8080
 
-# Run the Spring Boot application with a strict memory limit to leave RAM for Coral
-CMD sh -c 'coral sql "select 1" > /dev/null 2>&1 ; java -Xmx200m -jar target/demo-0.0.1-SNAPSHOT.jar'
+# Run the Spring Boot application with a strict memory limit
+CMD ["java", "-Xmx200m", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
