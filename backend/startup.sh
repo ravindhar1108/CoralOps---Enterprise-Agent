@@ -12,8 +12,6 @@ export SONARQUBE_API_KEY=$SONARQUBE_API_KEY
 # Register sources (these take a long time on 0.1 CPU, so we do it BEFORE Java!)
 coral source add github || true
 coral source add linear || true
-coral source add sentry || true
-coral source add sonarqube || true
 
 # Pre-warm the SQL engine
 coral sql "select 1" > /dev/null 2>&1 || true
