@@ -10,8 +10,8 @@ ENV CORAL_TELEMETRY=none
 # Install Coral CLI (Required for the MCP Server)
 RUN sh -c "$(curl -fsSL https://coral.turbot.com/install.sh)"
 
-# Pre-install the required Coral plugins for the demo
-RUN coral plugin install github linear sentry sonarqube
+# Pre-install the required Coral plugins and warm up the local database engine
+RUN coral plugin install github linear sentry sonarqube && coral sql "select 1"
 
 # Set working directory
 WORKDIR /app
