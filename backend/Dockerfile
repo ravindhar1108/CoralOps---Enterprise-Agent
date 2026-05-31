@@ -22,6 +22,7 @@ WORKDIR /app
 
 # Copy the backend source code
 COPY . .
+RUN chmod +x run-coral.sh
 
 # Build the project using Maven directly
 RUN mvn clean package -DskipTests
