@@ -4,6 +4,11 @@
 echo "Warming up Coral and registering schemas..."
 
 # Map Render environment variables to what Coral expects
+# Source .env if it exists so we have the variables locally
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
+
 export GITHUB_TOKEN=$GITHUB_PAT
 export LINEAR_API_KEY=$LINEAR_API_KEY
 export SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
