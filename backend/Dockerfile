@@ -9,6 +9,9 @@ ENV CORAL_INSTALL_DIR=/usr/local/bin
 RUN curl -fsSL https://withcoral.com/install.sh | sh || true
 RUN test -f /usr/local/bin/coral || ln -s /root/.local/bin/coral /usr/local/bin/coral
 
+# Warm up the local database engine during the build phase so it doesn't timeout the Java app
+RUN coral sql "select 1"
+
 # Set working directory
 WORKDIR /app
 
