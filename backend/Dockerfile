@@ -4,8 +4,10 @@ FROM eclipse-temurin:17-jdk-jammy
 # Install necessary tools
 RUN apt-get update && apt-get install -y curl unzip maven
 
-# Install the official Coral CLI globally so Java can find it
-RUN curl -fsSL https://withcoral.com/install.sh | CORAL_INSTALL_DIR=/usr/local/bin sh
+# Force the install script to put coral in the global system path
+ENV CORAL_INSTALL_DIR=/usr/local/bin
+RUN curl -fsSL https://withcoral.com/install.sh | sh || true
+RUN test -f /usr/local/bin/coral || ln -s /root/.local/bin/coral /usr/local/bin/coral
 
 # Set working directory
 WORKDIR /app
