@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import io.modelcontextprotocol.client.McpAsyncClient;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.client.transport.ServerParameters;
 import io.modelcontextprotocol.client.transport.StdioClientTransport;
@@ -30,12 +29,15 @@ public class CustomMcpConfig {
 
         StdioClientTransport transport = new StdioClientTransport(params);
 
-        McpAsyncClient asyncClient = McpAsyncClient.builder(transport).build();
+        // THE SILVER BULLET: Use the sync builder to override the initialization timeout to 3 MINUTES!
+        io.modelcontextprotocol.client.McpSyncClient syncClient = io.modelcontextprotocol.client.McpClient.sync(transport)
+                .initializationTimeout(Duration.ofMinutes(3))
+                .requestTimeout(Duration.ofMinutes(3))
+                .build();
 
-        // THE SILVER BULLET: Block for 3 MINUTES instead of the hardcoded 20 seconds!
-        // This guarantees it will NEVER timeout on Render's slow free tier.
-        asyncClient.initialize().block(Duration.ofMinutes(3));
+        // Explicitly initialize the client (this will now block for up to 3 minutes without failing)
+        syncClient.initialize();
 
-        return List.of(new McpSyncClient(asyncClient));
+        return List.of(syncClient);
     }
 }
