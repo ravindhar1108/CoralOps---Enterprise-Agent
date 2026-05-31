@@ -24,5 +24,5 @@ RUN mvn clean package -DskipTests
 # Expose the port Spring Boot runs on
 EXPOSE 8080
 
-# Run the Spring Boot application
-CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
+# Run the Spring Boot application, but explicitly warm up Coral first in the exact runtime environment!
+CMD sh -c 'coral sql "select 1" > /dev/null 2>&1 ; java -jar target/demo-0.0.1-SNAPSHOT.jar'
