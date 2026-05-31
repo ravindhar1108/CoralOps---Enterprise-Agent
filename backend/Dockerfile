@@ -4,8 +4,14 @@ FROM eclipse-temurin:17-jdk-jammy
 # Install necessary tools for Coral and Maven
 RUN apt-get update && apt-get install -y curl unzip maven
 
+# Disable telemetry so Coral doesn't prompt for input (which causes timeouts)
+ENV CORAL_TELEMETRY=none
+
 # Install Coral CLI (Required for the MCP Server)
 RUN sh -c "$(curl -fsSL https://coral.turbot.com/install.sh)"
+
+# Pre-install the required Coral plugins for the demo
+RUN coral plugin install github linear sentry sonarqube
 
 # Set working directory
 WORKDIR /app
