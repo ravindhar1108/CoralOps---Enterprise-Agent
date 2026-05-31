@@ -21,4 +21,4 @@ coral sql "select 1" > /dev/null 2>&1 || true
 echo "Coral warmup complete. Starting Spring Boot..."
 
 # Start the Java application with restricted memory
-exec java -Xmx200m -jar target/demo-0.0.1-SNAPSHOT.jar
+exec java -Xmx400m -jar target/demo-0.0.1-SNAPSHOT.jar

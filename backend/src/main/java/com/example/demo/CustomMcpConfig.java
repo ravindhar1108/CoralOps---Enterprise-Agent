@@ -16,7 +16,8 @@ public class CustomMcpConfig {
 
     @Bean
     public List<McpSyncClient> mcpSyncClients() {
-        Map<String, String> env = new HashMap<>();
+        // MUST inherit System.getenv() so we don't strip HOME and PATH, which Coral requires!
+        Map<String, String> env = new HashMap<>(System.getenv());
         if (System.getenv("GITHUB_PAT") != null) env.put("GITHUB_TOKEN", System.getenv("GITHUB_PAT"));
         if (System.getenv("LINEAR_API_KEY") != null) env.put("LINEAR_API_KEY", System.getenv("LINEAR_API_KEY"));
         if (System.getenv("SENTRY_AUTH_TOKEN") != null) env.put("SENTRY_AUTH_TOKEN", System.getenv("SENTRY_AUTH_TOKEN"));
