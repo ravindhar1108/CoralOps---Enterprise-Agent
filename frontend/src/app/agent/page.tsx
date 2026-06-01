@@ -47,7 +47,7 @@ export default function AgentPage() {
     setLoading(true);
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8081";
       const response = await fetch(`${backendUrl}/api/investigate?repoName=demo-project&query=${encodeURIComponent(textToSearch)}`);
       let data = await response.text();
       

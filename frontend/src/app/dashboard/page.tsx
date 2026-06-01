@@ -13,7 +13,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-const BASE = `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"}/api/investigate`;
+const BASE = `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8081"}/api/investigate`;
 const REPO = "demo-project";
 
 function parseResponse(text: string): any[] {

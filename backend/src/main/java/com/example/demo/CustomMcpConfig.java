@@ -15,7 +15,8 @@ import java.util.HashMap;
 public class CustomMcpConfig {
 
     @Bean
-    public List<McpSyncClient> mcpSyncClients(org.springframework.core.env.Environment springEnv) {
+    @org.springframework.context.annotation.Primary
+    public List<McpSyncClient> customMcpSyncClients(org.springframework.core.env.Environment springEnv) {
         // MUST inherit System.getenv() so we don't strip HOME and PATH, which Coral requires!
         Map<String, String> env = new HashMap<>(System.getenv());
         if (springEnv.getProperty("GITHUB_PAT") != null) env.put("GITHUB_TOKEN", springEnv.getProperty("GITHUB_PAT"));
@@ -23,7 +24,10 @@ public class CustomMcpConfig {
         if (springEnv.getProperty("SENTRY_AUTH_TOKEN") != null) env.put("SENTRY_AUTH_TOKEN", springEnv.getProperty("SENTRY_AUTH_TOKEN"));
         if (springEnv.getProperty("SONARQUBE_API_KEY") != null) env.put("SONARQUBE_API_KEY", springEnv.getProperty("SONARQUBE_API_KEY"));
 
-        ServerParameters params = ServerParameters.builder("/usr/local/bin/coral")
+        String os = System.getProperty("os.name").toLowerCase();
+        String command = os.contains("win") ? "coral.exe" : "coral";
+
+        ServerParameters params = ServerParameters.builder(command)
                 .args("mcp-stdio")
                 .env(env)
                 .build();

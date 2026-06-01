@@ -25,10 +25,11 @@ COPY . .
 RUN chmod +x startup.sh
 
 # Build the project using Maven directly
+ENV MAVEN_OPTS="-Xmx300m"
 RUN mvn clean package -DskipTests
 
 # Expose the port Spring Boot runs on
-EXPOSE 8080
+EXPOSE 8081
 
 # Run the dedicated startup script which handles pre-warming before launching Java
 CMD ["./startup.sh"]
